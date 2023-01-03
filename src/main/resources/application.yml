@@ -1,0 +1,88 @@
+info:
+  app:
+    fullname: Hocs Document Service
+    name: ${name:hocs-document-service}
+    version: ${version:0.0.1}
+
+database-urL: postgresql://${db.host:localhost}:${db.port:5432}/${db.name:postgres}?currentSchema=${db.schema.name:document}
+
+server:
+  http2:
+    enabled: true
+  max-http-header-size: 1048576
+  port: 8087
+  shutdown: graceful
+
+spring:
+  main:
+    banner-mode: off
+  flyway:
+    locations: classpath:/db/migration
+    schemas: ${db.schema.name:document}
+    url: jdbc:${database-urL}
+  r2dbc:
+    url: r2dbc:${database-urL}
+    username: root
+    password: dev
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+
+aws:
+  account:
+    id: 123456789012
+  queue:
+    document:
+      name: document-queue
+  sqs:
+    access:
+      key: 12345
+    region: eu-west-2
+    secret:
+      key: 12345
+  sns:
+    audit-search:
+      arn: arn:aws:sns:${aws.region}:${aws.sns.audit-search.account.id}:${aws.sns.audit-search.topic-name}
+      account:
+        secret-key: test
+        id: 000000000000
+        access-key: test
+      topic-name : hocs-audit-topic
+      region: eu-west-2
+  s3:
+    trusted:
+      bucket-name: trusted-bucket
+      kms-key-id:
+      account:
+        id: 000000000000
+        access-key: test
+        secret-key: test
+    untrusted:
+      bucket-name: untrusted-bucket
+      kms-key-id:
+      account:
+        id: 000000000000
+        access-key: test
+        secret-key: test
+  region: eu-west-2
+
+auditing:
+  deployment:
+    namespace: local
+    name: ${info.app.name}
+
+
+clamav:
+  root: http://localhost:8086
+  path: ${clamav.root}/scan
+
+hocs:
+  converter-service: http://localhost:8084
+  clamav-service: http://localhost:8086
+

@@ -1,0 +1,9 @@
+aws:
+  region: eu-west-2
+  sqs:
+    document:
+      access-key: ${document.sqs.access.key}
+      secret-key: ${document.sqs.secret.key}
+      name: ${document.sqs.queue.name}
+      url: ${document.sqs.queue.url}
+

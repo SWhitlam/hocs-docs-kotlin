@@ -1,0 +1,16 @@
+localstack:
+  host: localhost
+
+aws:
+  sqs:
+    config:
+      port: 4566
+      url: http://${localstack.host}:${aws.sqs.config.port}
+    document:
+      url: ${aws.sqs.config.url}/000000000000/${aws.queue.document.name}
+    document-dlq:
+      name: document-queue-dlq
+      url: ${aws.sqs.config.url}/000000000000/${aws.sqs.document-dlq.name}
+  sns:
+    audit-search:
+      arn: arn:aws:sns:${aws.region}:000000000000:${aws.sns.audit-search.topic-name}
